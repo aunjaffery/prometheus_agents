@@ -1,0 +1,13 @@
+---
+- name: Main Prometheus Agent Block
+  become: true
+  block:
+    - name: Import node_exporter task
+      ansible.builtin.import_tasks: node_exporter.yaml
+
+    - name: Import cadvisor task
+      ansible.builtin.include_tasks: cadvisor.yaml
+      when: docker_monitoring is defined and docker_monitoring | bool
+
+    - name: Import exporter_merger task
+      ansible.builtin.import_tasks: exporter_merger.yaml

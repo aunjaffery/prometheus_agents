@@ -1,0 +1,13 @@
+[Unit]
+Description=Cadvisor Server
+
+[Service]
+User=root
+ExecStart={{ cadvisor_bin_path }} --store_container_labels=false \
+    --enable_metrics=cpu,disk,memory,network,oom_event \
+    --housekeeping_interval=30s \
+    --docker_only=true \
+    --port {{ cadvisor_port }}
+
+[Install]
+WantedBy=multi-user.target

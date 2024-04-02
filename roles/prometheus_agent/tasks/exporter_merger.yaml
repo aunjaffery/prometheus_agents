@@ -1,0 +1,41 @@
+---
+- name: Download exporter_merger
+  ansible.builtin.get_url:
+    url: "{{ exporter_merger_url }}"
+    dest: "{{ exporter_merger_bin_path }}"
+    mode: 0755
+
+- name: Create directories for exporter-merger
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - /etc/exporter_merger
+
+- name: Copy config file for exporter_merger
+  ansible.builtin.template:
+    src: merger.yaml.j2
+    dest: /etc/exporter_merger/merger.yaml
+    mode: '0644'
+
+- name: Copy the exporter_merger systemd unit file.
+  ansible.builtin.template:
+    src: exporter_merger.service.j2
+    dest: /etc/systemd/system/exporter_merger.service
+    mode: 0644
+
+- name: Reload systemd daemon if unit file is changed.
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: exporter_merger
+    state: restarted
+
+- name: Ensure exporter_merger is running and enabled at boot.
+  ansible.builtin.service:
+    name: exporter_merger
+    state: "started"
+    enabled: true
+  when: not ansible_check_mode

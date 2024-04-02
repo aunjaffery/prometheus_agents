@@ -1,0 +1,7 @@
+---
+all:
+  hosts:
+  children:
+    devops:
+      hosts:
+        192.168.5.104: { docker_monitoring: true }

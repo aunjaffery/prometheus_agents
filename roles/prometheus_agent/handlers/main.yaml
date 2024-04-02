@@ -1,0 +1,17 @@
+---
+- name: Restart cadvisor
+  become: true
+  ansible.builtin.systemd:
+    name: cadvisor
+    state: restarted
+    daemon_reload: true
+
+- name: Restart Node_exporter
+  ansible.builtin.service:
+    name: node_exporter
+    state: restarted
+
+- name: Restart Exporter_merger
+  ansible.builtin.service:
+    name: exporter_merger
+    state: restarted

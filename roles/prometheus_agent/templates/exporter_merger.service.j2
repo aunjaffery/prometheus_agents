@@ -1,0 +1,16 @@
+
+[Unit]
+Description=Exporter Merger for Prometheus
+
+[Service]
+
+User=root
+Type=simple
+ExecStart={{ exporter_merger_bin_path }} \
+	--config-path /etc/exporter_merger/merger.yaml \
+	--listen-port {{ exporter_merger_port }}
+KillMode=process
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

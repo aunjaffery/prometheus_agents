@@ -1,0 +1,6 @@
+---
+- name: Deploy exporters for prometheus
+  hosts: all
+  become: true
+  roles:
+     - { role: prometheus_agent, tags: prometheus_agent }

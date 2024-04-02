@@ -1,0 +1,28 @@
+---
+- name: Cadvisor | download
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ cadvisor_download }}"
+    checksum: "sha256:{{ cadvisor_checksum }}"
+    dest: "{{ cadvisor_bin_path }}"
+    force: false
+    mode: u=rwx,g=rx,o=rx
+
+- name: Cadvisor | server systemd service
+  become: true
+  ansible.builtin.template:
+    dest: /etc/systemd/system/cadvisor.service
+    src: cadvisor.service.j2
+    mode: 0644
+  notify:
+    - Restart cadvisor
+  when: not ansible_check_mode
+
+- name: Cadvisor | enable and start server systemd
+  become: true
+  ansible.builtin.systemd:
+    enabled: true
+    name: cadvisor.service
+    state: started
+    daemon_reload: true
+  when: not ansible_check_mode

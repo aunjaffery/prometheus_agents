@@ -1,0 +1,5 @@
+exporters:
+  - url: http://localhost:9102/metrics
+{% if docker_monitoring is defined and docker_monitoring | bool %}
+  - url: http://localhost:9101/metrics
+{% endif %}
